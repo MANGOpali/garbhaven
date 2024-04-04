@@ -1,0 +1,29 @@
+{{>layout}}
+{{>adminNav}}
+<form method="POST" class="addMem" autocomplete="off" enctype="multipart/form-data">
+    <h2 class="center">Add a Product</h2>
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Title:</label>
+        <input type="text" name="title" required class="form-control" id="exampleInputEmail1" />
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Description</label>
+        <textarea type="text" name="description" required class="form-control" id="exampleInputEmail1" /></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Price</label>
+        <input type="number" name="price" required class="form-control" id="exampleInputEmail1" />
+    </div>
+    <div class="mb-3">
+    <label for="exampleInputFile" class="form-label">Image</label>
+     <input type="file" name="productImage" accept="image/*">
+</div>
+
+
+    <button type="submit" class="btn btn-success" style="margin-bottom: 5px;">Add</button>
+
+    {{!-- <a href="/viewall" class="btn btn-primary">View All</a> --}}
+
+
+
+</form>

@@ -1,0 +1,81 @@
+{{>layout}}
+{{>navbar}}
+
+<style>
+    .product-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px;
+    }
+    img{
+        width: 200px;
+        height: auto;
+    }
+   
+</style>    
+{{>banner}}
+<div class="product-area section">
+    <div class="container">
+        <div class="row">
+            <h1 style="text-align: center " class="mt-3">All Products</h1>
+            {{#each products}}
+                <div class="col-xl-3 col-lg-4 col-md-4 col-12">
+                    <div class="single-product" >
+                        <div class="product-img" style="height: 300px;">
+                            <a href="/product-details/{{this._id}}">
+                                <img class="default-img" src="/images/products/{{this.image}}" alt="#">
+                            </a>
+                            <div class="button-head">
+            
+                                <div class="product-action-2">
+                                    <a title="Add to Cart" class="add-to-cart-btn" data-product-id="{{this._id}}">Add to Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-content">
+                            <h3><a href="/product-details/{{this._id}}">{{this.title}}</a></h3>
+                            <div class="product-price">
+                                <span>Rs {{this.price}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
+
+	
+
+{{!-- for adding to cart section  --}}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.add-to-cart-btn').click(function () {
+            const productId = $(this).data('product-id');
+           
+
+            // Make an AJAX request to add the product to the cart
+            $.ajax({
+                url: '/cart',
+                method: 'POST',
+                data: { productId },
+                success: function (response) {
+                    console.log(response);
+                    // Optionally, update the UI to indicate the product has been added to the cart
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+</html>
+
+{{>footer}}
+

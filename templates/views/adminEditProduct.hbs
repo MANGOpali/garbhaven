@@ -1,0 +1,40 @@
+{{>layout}}
+{{>adminNav}}
+<style>
+    .boxTable {
+    box-shadow: 7px 10px 17px 0px rgba(0, 0, 0, 0.73);
+    -webkit-box-shadow: 7px 10px 17px 0px rgba(0, 0, 0, 0.73);
+    -moz-box-shadow: 7px 10px 17px 0px rgba(0, 0, 0, 0.73);
+    padding: 60px 80px;
+    border-radius: 10px;
+    margin: 110px 350px;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+<form method="POST" class="boxTable" autocomplete="off">
+    <h2 class="center">Editing for {{product.title}}</h2>
+    <div class="mb-3">
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" name="title" class="form-control" value="{{product.title}}" id="title" />
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description:</label>
+        <textarea type="text" name="description" value="{{product.description}}" class="form-control"
+            id="description" rows="4" cols="50">{{product.description}}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="price" class="form-label">Price:</label>
+        <input type="text" name="price" value="{{product.price}}" class="form-control" id="price" />
+    </div>
+    <div class="mb-3">
+        <label for="image" class="form-label">Image:</label>
+        <input type="text" name="image" value="{{product.image}}" class="form-control" id="image" />
+    </div>
+
+    <button type="submit" class="btn btn-success" style="margin-bottom: 5px;">Update</button>
+
+    {{!-- <a href="/viewall" class="btn btn-primary">View All</a> --}}
+</form>
+
+

@@ -1,0 +1,197 @@
+{{>layout}}
+{{>navbar}}
+
+<div class="shopping-cart section">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<!-- Shopping Summery -->
+					<table class="table shopping-summery">
+						<thead>
+							<tr class="main-hading">
+								<th>PRODUCT</th>
+								<th>NAME</th>
+								<th class="text-center">UNIT PRICE</th>
+								<th class="text-center">QUANTITY</th>
+								<th class="text-center">TOTAL</th> 
+								
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+                                {{#each products}}
+								<td class="image" data-title="No"><img src="/images/products/{{this.image}}" alt="#"></td>
+								<td class="product-des" data-title="Description">
+									<p class="product-name"><a href="#">{{this.title}}</a></p>
+									
+								</td>
+								<td class="price" data-title="Price"><span>Rs {{this.price}}</span></td>
+								<td class="qty" data-title="Qty"><!-- Input Order -->
+									<div class="input-group">
+										<div class="button minus">
+											<button type="button" class="btn btn-primary btn-number"  data-type="minus" data-field="quant[1]">
+												<i class="ti-minus"></i>
+											</button>
+										</div>
+										<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="100" value="1">
+										<div class="button plus">
+											<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
+												<i class="ti-plus"></i>
+											</button>
+										</div>
+									</div>
+									<!--/ End Input Order -->
+								</td>
+								<td class="total-amount" data-title="Total"><span class="total-price">Rs {{this.price}}</span></td>
+                                <td class="action" data-title="Remove"><a href="#" class="remove-from-cart" data-product-id="{{this._id}}"><i class="ti-trash remove-icon"></i></a></td>
+                                <input type="hidden" id="totalAmount" name="total_amount">
+							</tr>
+
+                             {{/each}}
+
+						</tbody>
+					</table>
+                        <div class="bottom">
+                            {{#if products.length}}
+									<div class="total">
+											<span> Total</span>
+											<span class="total-amount">Rs 0.00</span>
+											</div>
+											<a href="/orders" class="btn btn-primary">Checkout</a>
+									</div>
+                             {{/if}}   
+                  
+                    
+            </div>
+        </div>
+        
+<body>
+ 
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+
+ $(document).ready(function () {
+   // Listen for click events on elements with class 'remove-from-cart'
+        $('.remove-from-cart').on('click', function (e) {
+            e.preventDefault();
+
+            // Get the productId from the 'data-product-id' attribute
+            const productId = $(this).data('product-id');
+
+            // Clear localStorage for the specific product
+            localStorage.removeItem("quantity_" + productId);
+
+            // Send an AJAX request to remove the product from the cart
+            $.ajax({
+                type: 'POST',
+                url: '/cart/delete',
+                data: { productId: productId },
+                success: function (response) {
+                    // If the removal was successful, you can update the UI as needed
+                    console.log(response.message);
+                    // For example, you might want to reload the page or update the cart section
+                    window.location.reload(); // Reload the page for simplicity
+                },
+                error: function (error) {
+                    console.error('Error removing product from cart:', error);
+                }
+        });
+    });
+    // Plus button click
+    $('.button.plus').click(function () {
+        var inputField = $(this).parent().parent().find('.input-number');
+        var currentValue = parseInt(inputField.val(), 10);
+        var maxValue = parseInt(inputField.attr('data-max'), 10);
+
+        if (currentValue < maxValue) {
+            inputField.val(currentValue + 1);
+            updateTotal();
+
+            // Update quantity in localStorage
+            var productId = $(this).closest('tr').find('.remove-from-cart').data('product-id');
+            localStorage.setItem("quantity_" + productId, currentValue + 1);
+        }
+    });
+
+    // Minus button click
+    $('.button.minus').click(function () {
+        var inputField = $(this).parent().parent().find('.input-number');
+        var currentValue = parseInt(inputField.val(), 10);
+        var minValue = parseInt(inputField.attr('data-min'), 10);
+
+        if (currentValue > minValue) {
+            inputField.val(currentValue - 1);
+            updateTotal();
+
+            // Update quantity in localStorage
+            var productId = $(this).closest('tr').find('.remove-from-cart').data('product-id');
+            localStorage.setItem("quantity_" + productId, currentValue - 1);
+        }
+    });
+
+    function updateTotal() {
+        var total = 0;
+
+        $(".shopping-summery tbody tr").each(function () {
+            var priceText = $(this).find(".price span").text().replace("Rs ", "");
+            var quantity = $(this).find(".input-number").val();
+            var productTotal = parseFloat(priceText) * parseInt(quantity);
+
+            total += productTotal;
+
+            $(this).find(".total-amount span").text("Rs " + productTotal.toFixed(2));
+
+            // Store quantity in local storage
+            var productId = $(this).find(".remove-from-cart").data("product-id");
+            localStorage.setItem("quantity_" + productId, quantity);
+        });
+
+        $(".bottom .total-amount").text("Rs " + total.toFixed(2));
+    }
+
+    $(".input-number").on("input", function () {
+        updateTotal();
+    });
+
+    // Retrieve quantity from local storage when the page loads
+    $(".shopping-summery tbody tr").each(function () {
+        var productId = $(this).find(".remove-from-cart").data("product-id");
+        var quantity = localStorage.getItem("quantity_" + productId);
+        if (quantity) {
+            $(this).find(".input-number").val(quantity);
+        }
+    });
+
+    // Update totals when the page loads
+    updateTotal();
+});
+
+
+//to hide total and checkout if no items there
+         function calculateTotal(products) {
+        let total = 0;
+        for (const product of products) {
+            total += product.price;
+        }
+        return total;
+        }
+    
+     function calculateTotalAmount() {
+        let totalAmount = 0;
+        // Iterate over each product row in the cart
+        document.querySelectorAll('.product-row').forEach(function(row) {
+            // Get price and quantity of the product
+            const price = parseFloat(row.querySelector('.price span').innerText.replace('Rs ', ''));
+            const quantity = parseInt(row.querySelector('.input-number').value);
+            // Calculate subtotal for the product
+            const subtotal = price * quantity;
+            // Add subtotal to the total amount
+            totalAmount += subtotal;
+        });
+        return totalAmount;
+    }
+
+    // Update the total amount input field with the calculated total
+    document.getElementById('totalAmount').value = calculateTotalAmount();
+</script>

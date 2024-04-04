@@ -1,0 +1,142 @@
+{{>layout}}
+{{>navbar}}
+    <style>
+        
+        .product-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            border: 1px solid #ddd; 
+            padding: 20px;
+            border-radius: 5px; 
+        }
+
+        .product-image {
+            width: 360px;
+            height: 450px;
+            margin-right: 50px;
+            margin-bottom: 200px;
+        }
+
+        .product-details {
+            max-width: 400px;
+        }
+
+        .product-details h2 {
+            margin-bottom: 10px;
+        }
+
+        .product-details p {
+            margin-top: 20px;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        footer {
+            background: #111;
+            padding: 30px 23px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 125px;
+        }
+            footer span a {
+                color: #F7941D;
+                text-decoration: none;
+            }
+            footer span a:hover {
+                text-decoration: underline;
+            }
+        .product-desc{
+            margin-top: 10px ;
+        }
+        .paypal-button-container{
+            margin-top: 10px;
+        }
+        /* Custom CSS to override Bootstrap button padding */
+            .custom-btn-padding {
+                margin-bottom: 10px;
+            --bs-btn-padding-x: 9.2rem; 
+            }
+
+    </style>
+    <div id="alertMessage" class="alert alert-success" role="alert" style="display: none;">
+    Product added to cart successfully!
+    </div>
+
+   <div class="product-container">
+    <img class="product-image" src="/images/products/{{ product.image }}" alt="Product Image">
+    <div class="product-details">
+        <h2>{{ product.title }}</h2>
+        <p class="product-price">Rs {{ product.price }}</p>
+        <button onclick="addToCart('{{ product._id }}')" class="btn btn-dark btn-lg btn-block custom-btn-padding">Add to Cart</button>
+        <!-- "Buy Now" button -->
+        <div id="paypal-button-container"></div>
+        <p>Product description:</p>
+        <p class="product-desc">{{ product.description }}</p>
+    </div>
+</div>
+
+<!-- Include PayPal JavaScript SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AZpFKzph-gVkLcfJr93HP9V3mtcITxibiYG_ZDgQFnHQtvpXIOoflJ2bu3BCYGGNa0pwiaFoP4wy1lom&currency=USD"></script>
+
+<script>
+    // Function to add product to cart
+    function addToCart(productId) {
+        // Make an AJAX request to your backend endpoint
+        fetch('/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId: productId })
+        })
+        .then(response => {
+            if (response.ok) {
+                document.getElementById('alertMessage').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('alertMessage').style.display = 'none';
+                }, 1000);
+            } else {
+                throw new Error('Failed to add product to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error adding product to cart:', error);
+            alert('Failed to add product to cart. Please try again later.');
+        });
+    }
+
+    // PayPal JavaScript SDK script
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        currency_code: 'USD', // Set currency code to NRP
+                        value: '{{ product.price }}' // Use the product price here
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                console.log(details); // Handle successful payment, e.g., update database
+                alert('Payment successful!');
+                window.location.href = '/'; // Redirect to confirmation page
+            });
+        }
+    }).render('#paypal-button-container');
+</script>
+
+
+{{>footer}}
+
+    
+
+

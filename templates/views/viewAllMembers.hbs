@@ -1,0 +1,37 @@
+{{>layout}}
+{{>adminNav}}
+
+<div class="tableContainer mt-4">
+
+    <div class="tableDiv">
+        <h1 style="text-align: center " class="mb-3">All Members</h1>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                
+            
+
+                {{#each members }}
+                <div class="head">
+                    <tr>
+                        <th scope="row">{{this.fname}} {{ this.lname}}</th>
+                        <th>{{this.email}}</th>
+                        <th class="stat">{{this.phone}}</th>
+                        <td>
+                        </td>
+                    </tr>
+                </div>
+                {{/each}}
+
+            </tbody>
+        </table>
+    </div>
+</div>

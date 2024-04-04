@@ -1,0 +1,112 @@
+{{>layout}}
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200&family=Parisienne&family=Ubuntu:wght@300&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap');
+:root {
+  --main-color: #F7941D;
+  --black-color: #000;
+  --main-white: #fcf5f5;
+  --mell-black-rgb: 39, 37, 42;
+  --mell-black: #27252a;
+  --bdr-color: #f0e8e8;
+  --mell-extra: #fcf5f5;
+}
+.main-slider {
+  position: relative;
+  display: block;
+}
+
+.main-slider .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.main-slider .container .main-slider_content {
+  z-index: 2;
+  position: absolute;
+  display: block;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+}
+
+.main-slider .container .main-slider_content p {
+  font-size: 40px;
+ font-family: "Madimi One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  opacity: .8;
+  color: var(--main-white);
+}
+
+.image-layer {
+  position: relative;
+  height: 90vh;
+}
+
+.image-layer img {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.thm-btn {
+  display: inline-block;
+  vertical-align: middle;
+  appearance: none;
+  outline: none !important;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--main-white);
+  text-transform: uppercase;
+  background-color: var(--main-color);
+  padding: 14px 49px 14px;
+  -webkit-transition: all 0.5s linear;
+  transition: all 0.2s linear;
+  overflow: hidden;
+  letter-spacing: 0.2em;
+  z-index: 1;
+  opacity: .8;
+}
+.thm-btn:hover {
+  color: var(--main-color);
+  background-color: var(--main-white);
+}
+.overlay {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  height: 90vh;
+  background-color: rgba(var(--mell-black-rgb), 0.6);
+  z-index: 1;
+}
+ .slide-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    transition: all .8s ease;
+}
+
+</style>
+<section class="main-slider" id="home">
+        <div class="image-layer ">
+           <div class="slide-image slide-media" style="background-image:url('//minion-vinovatheme.myshopify.com/cdn/shop/files/slideshow-3_8d153831-1053-4b01-9846-85b389bc650a_1920x950.jpg?v=1617703716');">  </div> 
+            <div class="overlay"></div>
+        </div>
+        <div class="container max-width">
+            <div class="main-slider_content">
+                <p class="main-slider__sub-title">Empowering your style, one click at a time.</p>
+                
+            
+            </div>
+        </div>
+    </section>
+
+    

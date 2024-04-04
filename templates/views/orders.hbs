@@ -1,0 +1,31 @@
+{{>layout}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eSewa Payment</title>
+</head>
+<body>
+   <form id="esewa-payment-form" action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
+        <input type="hidden" name="amount" value="{{ totalAmount }}">
+        <input type="hidden" name="tax_amount" value="0">
+        <input type="hidden" name="total_amount" value="{{ totalAmount }}">
+        <input type="hidden" name="transaction_uuid" value="{{ transactionUuid }}">
+        <input type="hidden" name="product_code" value="EPAYTEST">
+        <input type="hidden" name="product_service_charge" value="0">
+        <input type="hidden" name="product_delivery_charge" value="0">
+        <input type="hidden" name="success_url" value="https://example.com/success">
+        <input type="hidden" name="failure_url" value="https://example.com/failure">
+        <input type="hidden" name="signed_field_names" value="total_amount,transaction_uuid,product_code">
+        <input type="hidden" name="signature" value="{{ signature }}">
+        <input type="submit" value="Pay with eSewa">
+    </form>
+
+    <script>
+        // Submit the eSewa payment form when the page loads
+        document.getElementById('esewa-payment-form').submit();
+    </script>
+</body>
+</html>
