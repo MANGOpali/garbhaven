@@ -6,10 +6,7 @@
   .margin{
     margin-right: 20px;
   }
-  .navbar{
-    padding-left: 25px;
-    padding-right: 25px;
-  }
+  
 </style>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -19,18 +16,23 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         {{!-- <li class="nav-item">
           <a class="nav-link" href="/addProduct">Add Product</a>
         </li> --}}
+        
         <li class="nav-item">
-          <a class="nav-link" href="/cart">Cart</a>
+          <a class="nav-link" href="/contactus">Contact</a>
         </li>
-        
-        
+        <li class="nav-item">
+          <a class="nav-link" href="/aboutus">Teams</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+        </li>
       </ul>
       <div class="m-2">
         {{#if user}}
@@ -39,10 +41,10 @@
         <a class="btn btn-dark" href="/logout" role="button">logout</a>
         </div>
        {{else}}
-        <a class="btn btn-success" href="/loginPage" role="button">Login</a>
+        <a class="btn btn-dark" href="/loginPage" role="button">Login</a>
       </div>
       <div>
-      <a class="btn btn-secondary" href="/registerPage" role="button">Signup</a>
+      <a class="btn btn-dark" href="/registerPage" role="button">Signup</a>
       {{/if}}
 
       </div>

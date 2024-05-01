@@ -1,6 +1,26 @@
 {{>layout}}
 {{>navbar}}
+<div id="alertMessage" class="alert alert-danger" role="alert" style="display: none;">
+    Please Fill the Details First !
+</div>
+<style>
+    .col-12 {
+    flex: 0 0 auto;
+    width: 70%;
+    }
+    @media (min-width: 768px){
+        .col-md-8 {
+                width: 30%;
+            }
 
+        .col-md-4 {
+           
+            width: 80%;
+        }
+}
+
+    
+</style>
 <div class="shopping-cart section">
 		<div class="container">
 			<div class="row">
@@ -13,7 +33,7 @@
 								<th>NAME</th>
 								<th class="text-center">UNIT PRICE</th>
 								<th class="text-center">QUANTITY</th>
-								<th class="text-center">TOTAL</th> 
+								
 								
 							</tr>
 						</thead>
@@ -22,7 +42,7 @@
                                 {{#each products}}
 								<td class="image" data-title="No"><img src="/images/products/{{this.image}}" alt="#"></td>
 								<td class="product-des" data-title="Description">
-									<p class="product-name"><a href="#">{{this.title}}</a></p>
+									<p class="product-name"><a href="/product-details/{{this._id}}">{{this.title}}</a></p>
 									
 								</td>
 								<td class="price" data-title="Price"><span>Rs {{this.price}}</span></td>
@@ -42,156 +62,250 @@
 									</div>
 									<!--/ End Input Order -->
 								</td>
-								<td class="total-amount" data-title="Total"><span class="total-price">Rs {{this.price}}</span></td>
-                                <td class="action" data-title="Remove"><a href="#" class="remove-from-cart" data-product-id="{{this._id}}"><i class="ti-trash remove-icon"></i></a></td>
-                                <input type="hidden" id="totalAmount" name="total_amount">
+				
+                                <td class="action" data-title="Remove"><a href="#" class="remove-from-cart" data-product-id="{{this._id}}"><i class="fa-solid fa-trash" style="color:black"></i></a></td>
+                                
 							</tr>
 
                              {{/each}}
 
 						</tbody>
 					</table>
-                        <div class="bottom">
+                        
+             </div>
+                                 
+                            {{!-- summary  --}}
+                            <div class="col-md-8 order-md-1">
+            <h4 class="mb-3">Summary</h4>
+            <form class="needs-validation" novalidate="">
+                <div class="row">
+                    <h5 class="mb-3">Detail of the buyer</h5>
+                    <div class="col-md-6 mb-3">
+                        <label for="firstName">First name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder=""  required>
+                        <div class="invalid-feedback"> Valid first name is required. </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="lastName">Last name</label>
+                        <input type="text" class="form-control" id="lastName" placeholder=""  required>
+                        <div class="invalid-feedback"> Valid last name is required. </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="email">Email <span class="text-muted"></span></label>
+                    <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
+                    <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
+                </div>
+                <div class="mb-3">
+                    <label for="address">Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="Your Address " required>
+                    <div class="invalid-feedback"> Please enter your shipping address. </div>
+                </div>
+                <div class="mb-3">
+                    <label for="address">Phone</label>
+                    <input type="number" class="form-control" id="phone" placeholder="Your phone number " required>
+                    <div class="invalid-feedback"> Please enter your phone number. </div>
+                </div>         
+                <div class="row">
+            <div class="col-md-4 order-md-2 mb-4">
+            <ul class="list-group mb-3 sticky-top">
+                 <!-- Total price -->
+                 <div class="bottom">
+                    
                             {{#if products.length}}
 									<div class="total">
-											<span> Total</span>
-											<span class="total-amount">Rs 0.00</span>
+
+                                        <li class="list-group-item">
+                                            <span  style="font-weight: 500; ">Your Total</span>
+											<span style="font-weight: 500;margin-left:20px" id="totalAmount" class="total-amount">Rs 0.00</span>
 											</div>
-											<a href="/orders" class="btn btn-primary">Checkout</a>
-									</div>
-                             {{/if}}   
-                  
-                    
-            </div>
+											<a href="#" class="btn btn-dark mt-2 mb-2" id="checkout-button" data-action="show-paypal">Continue to Checkout</a>
+
+                                            
+                                        </li>	
+                                     </div>
+                                     <div class="payment-method">
+                                        
+                                        <div id="paypal-button-container"  style="display: none;"></div>
+                                     </div>
+                                    
+                          {{/if}} 
+            
+          </ul>
+            </div>   
+                      </form>
+                 </div>
+            </div> 
         </div>
+    </div>
         
 <body>
  
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- Include PayPal JavaScript SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AZpFKzph-gVkLcfJr93HP9V3mtcITxibiYG_ZDgQFnHQtvpXIOoflJ2bu3BCYGGNa0pwiaFoP4wy1lom&currency=USD"></script>
 <script>
+$(document).ready(function () {
+    // Hide PayPal button initially
+    $('#payment-method').hide();
 
- $(document).ready(function () {
-   // Listen for click events on elements with class 'remove-from-cart'
+    // Listen for click events on the checkout button
+    $('#checkout-button[data-action="show-paypal"]').on('click', function (e) {
+        e.preventDefault();
+        // Show PayPal button when the checkout button is clicked
+        $('#paypal-button-container').show();
+    });
+
+   // PayPal JavaScript SDK script
+paypal.Buttons({
+    createOrder: function(data, actions) {
+         var totalAmount = parseFloat(document.getElementById('totalAmount').innerText.replace('Rs ', ''));
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    currency_code: 'USD',
+                    value: totalAmount
+                }
+            }]
+        });
+    },
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+            // Gather the information from the form fields
+            var firstName = $('#firstName').val();
+            var lastName = $('#lastName').val();
+            var email = $('#email').val();
+            var address = $('#address').val();
+            var phone = $('#phone').val();
+
+            // Send the order data to the server
+            $.ajax({
+                type: 'POST',
+                url: '/saveOrder',
+                data: {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    address: address,
+                    phone: phone,
+                    paymentDetails: details
+                },
+                success: function (response) {
+                    // Handle success response from the server
+                    console.log(response);
+                    alert('Order saved successfully!');
+                    window.location.href = '/'; // Redirect to home page or confirmation page
+                },
+                error: function (error) {
+                    // Handle error response from the server
+                    console.error('Error saving order:', error);
+                    alert('Error occurred while saving order. Please try again.');
+                }
+            });
+        });
+    }
+}).render('#paypal-button-container');
+
+    
+        
+        // Listen for click events on elements with class 'remove-from-cart'
         $('.remove-from-cart').on('click', function (e) {
             e.preventDefault();
-
+    
             // Get the productId from the 'data-product-id' attribute
             const productId = $(this).data('product-id');
-
+    
             // Clear localStorage for the specific product
             localStorage.removeItem("quantity_" + productId);
-
+    
             // Send an AJAX request to remove the product from the cart
             $.ajax({
                 type: 'POST',
                 url: '/cart/delete',
                 data: { productId: productId },
                 success: function (response) {
-                    // If the removal was successful, you can update the UI as needed
                     console.log(response.message);
-                    // For example, you might want to reload the page or update the cart section
                     window.location.reload(); // Reload the page for simplicity
                 },
                 error: function (error) {
                     console.error('Error removing product from cart:', error);
                 }
+            });
         });
-    });
-    // Plus button click
-    $('.button.plus').click(function () {
-        var inputField = $(this).parent().parent().find('.input-number');
-        var currentValue = parseInt(inputField.val(), 10);
-        var maxValue = parseInt(inputField.attr('data-max'), 10);
-
-        if (currentValue < maxValue) {
-            inputField.val(currentValue + 1);
-            updateTotal();
-
-            // Update quantity in localStorage
-            var productId = $(this).closest('tr').find('.remove-from-cart').data('product-id');
-            localStorage.setItem("quantity_" + productId, currentValue + 1);
-        }
-    });
-
-    // Minus button click
-    $('.button.minus').click(function () {
-        var inputField = $(this).parent().parent().find('.input-number');
-        var currentValue = parseInt(inputField.val(), 10);
-        var minValue = parseInt(inputField.attr('data-min'), 10);
-
-        if (currentValue > minValue) {
-            inputField.val(currentValue - 1);
-            updateTotal();
-
-            // Update quantity in localStorage
-            var productId = $(this).closest('tr').find('.remove-from-cart').data('product-id');
-            localStorage.setItem("quantity_" + productId, currentValue - 1);
-        }
-    });
-
-    function updateTotal() {
-        var total = 0;
-
-        $(".shopping-summery tbody tr").each(function () {
-            var priceText = $(this).find(".price span").text().replace("Rs ", "");
-            var quantity = $(this).find(".input-number").val();
-            var productTotal = parseFloat(priceText) * parseInt(quantity);
-
-            total += productTotal;
-
-            $(this).find(".total-amount span").text("Rs " + productTotal.toFixed(2));
-
-            // Store quantity in local storage
-            var productId = $(this).find(".remove-from-cart").data("product-id");
-            localStorage.setItem("quantity_" + productId, quantity);
+    
+        // Plus button click
+        $('.button.plus').click(function () {
+            var inputField = $(this).parent().parent().find('.input-number');
+            var currentValue = parseInt(inputField.val(), 10);
+            var maxValue = parseInt(inputField.attr('data-max'), 10);
+    
+            if (currentValue < maxValue) {
+                inputField.val(currentValue + 1);
+                updateTotal();
+                var productId = $(this).closest('tr').find('.remove-from-cart').data('product-id');
+                localStorage.setItem("quantity_" + productId, currentValue + 1);
+            }
         });
-
-        $(".bottom .total-amount").text("Rs " + total.toFixed(2));
-    }
-
-    $(".input-number").on("input", function () {
-        updateTotal();
-    });
-
-    // Retrieve quantity from local storage when the page loads
-    $(".shopping-summery tbody tr").each(function () {
-        var productId = $(this).find(".remove-from-cart").data("product-id");
-        var quantity = localStorage.getItem("quantity_" + productId);
-        if (quantity) {
-            $(this).find(".input-number").val(quantity);
-        }
-    });
-
-    // Update totals when the page loads
-    updateTotal();
-});
-
-
-//to hide total and checkout if no items there
-         function calculateTotal(products) {
-        let total = 0;
-        for (const product of products) {
-            total += product.price;
-        }
-        return total;
+    
+        // Minus button click
+        $('.button.minus').click(function () {
+            var inputField = $(this).parent().parent().find('.input-number');
+            var currentValue = parseInt(inputField.val(), 10);
+            var minValue = parseInt(inputField.attr('data-min'), 10);
+    
+            if (currentValue > minValue) {
+                inputField.val(currentValue - 1);
+                updateTotal();
+                var productId = $(this).closest('tr').find('.remove-from-cart').data('product-id');
+                localStorage.setItem("quantity_" + productId, currentValue - 1);
+            }
+        });
+    
+        // Function to update total
+        function updateTotal() {
+            var total = 0;
+    
+            $(".shopping-summery tbody tr").each(function () {
+                var priceText = $(this).find(".price span").text().replace("Rs ", "");
+                var quantity = $(this).find(".input-number").val();
+                var productTotal = parseFloat(priceText) * parseInt(quantity);
+                total += productTotal;
+                $(this).find(".total-amount span").text("Rs " + productTotal.toFixed(2));
+                var productId = $(this).find(".remove-from-cart").data("product-id");
+                localStorage.setItem("quantity_" + productId, quantity);
+            });
+    
+            $(".bottom .total-amount").text("Rs " + total.toFixed(2));
+            // Update total amount input field
+            document.getElementById('totalAmount').value = total.toFixed(2);
         }
     
-     function calculateTotalAmount() {
+        // Retrieve quantity from local storage when the page loads
+        $(".shopping-summery tbody tr").each(function () {
+            var productId = $(this).find(".remove-from-cart").data("product-id");
+            var quantity = localStorage.getItem("quantity_" + productId);
+            if (quantity) {
+                $(this).find(".input-number").val(quantity);
+            }
+        });
+    
+        // Update totals when the page loads
+        updateTotal();
+    });
+    
+    // Function to calculate total amount
+    function calculateTotalAmount() {
         let totalAmount = 0;
-        // Iterate over each product row in the cart
         document.querySelectorAll('.product-row').forEach(function(row) {
-            // Get price and quantity of the product
             const price = parseFloat(row.querySelector('.price span').innerText.replace('Rs ', ''));
             const quantity = parseInt(row.querySelector('.input-number').value);
-            // Calculate subtotal for the product
             const subtotal = price * quantity;
-            // Add subtotal to the total amount
             totalAmount += subtotal;
         });
         return totalAmount;
     }
+    
 
-    // Update the total amount input field with the calculated total
-    document.getElementById('totalAmount').value = calculateTotalAmount();
 </script>

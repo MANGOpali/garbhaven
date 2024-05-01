@@ -1,5 +1,17 @@
+.navbar {
+    padding-left: 25px;
+    padding-right: 25px;
+}
 .tableDiv {
     margin: 10px 200px;
+    box-shadow: 7px 10px 17px 0px rgba(0, 0, 0, 0.73);
+    -webkit-box-shadow: 7px 10px 17px 0px rgba(0, 0, 0, 0.73);
+    -moz-box-shadow: 7px 10px 17px 0px rgba(0, 0, 0, 0.73);
+    padding: 50px 30px;
+    border-radius: 10px;
+  }
+  .login-tableDiv {
+    margin: 10px 370px;
     box-shadow: 7px 10px 17px 0px rgba(0, 0, 0, 0.73);
     -webkit-box-shadow: 7px 10px 17px 0px rgba(0, 0, 0, 0.73);
     -moz-box-shadow: 7px 10px 17px 0px rgba(0, 0, 0, 0.73);
@@ -79,6 +91,8 @@
 	background:#F7941D;
 	color:#fff;
 	border-color:transparent;
+	text-decoration: none;
+	
 }
 /* Sinlge Product */
 .single-product .product-content h3 a {
@@ -679,7 +693,8 @@
 .shopping-summery tbody tr img {
 	border-radius: 0;
 	width: 80px;
-	height: 80px;
+	height: 100px;
+	object-fit:cover;
 }
 .shopping-summery tbody tr:last-child{
 	border:none;

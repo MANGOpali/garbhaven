@@ -1,0 +1,46 @@
+{{>layout}}
+{{>adminNav}}
+<style>
+
+.message-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.message {
+  margin-bottom: 5px;
+}
+
+.message p {
+  margin: 5px 0;
+}
+
+.message p:first-child {
+  margin-top: 0;
+}
+
+</style>
+<div class="tableContainer mt-4">
+
+    <div class="tableDiv">
+        <h1 style="text-align: center " class="mb-3">Messages</h1>
+        
+            
+                {{#each messages}}
+                <div class="message-box">
+                    <div class="message">
+                    <p><strong>Name:</strong> {{name}}</p>
+                    <p><strong>Email:</strong> {{email}}</p>
+                    <p><strong>Phone:</strong> {{phone}}</p>
+                    <p><strong>Message:</strong> {{message}}</p>
+                    <p><strong>Created At:</strong> {{createdAt}}</p>
+                    </div>
+                </div>
+                {{/each}}
+
+            
+    </div>
+</div>
+
+

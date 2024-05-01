@@ -11,6 +11,9 @@ const paypal = require('paypal-rest-sdk');
 
 const app = express();
 
+//routes
+const contactRoute = require("../router/contact");
+const adminContactRoute= require("../router/adminContact");
 // Middleware to parse request body
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -60,6 +63,7 @@ const Register = require("./models/registers");
 const Product = require("./models/addProduct");
 const AdminRegister = require("./models/adminReg");
 const Order = require("./models/orders");
+
 
 //use static file to import css
 const static_path = path.join(__dirname, "../public");
@@ -310,36 +314,48 @@ app.post('/cart/delete', async (req, res) => {
 // }
 
 // Define the /checkout route
+// Route to handle the checkout process
 app.get('/checkout', async (req, res) => {
+    try {
+        // Retrieve the total cart price from the request query parameters
+        const totalCartPrice = req.query.total;
+
+        // Render the checkout page and pass the total cart price to the template
+        res.render('checkout', { totalCartPrice });
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Route to handle order creation
+app.post('/saveOrder', async (req, res) => {
   try {
-      // Get the user's cart items from the session
-      const cartItems = req.session.cart || [];
+      // Create a new order instance
+      const newOrder = new Order({
+          orderId: req.body.orderId,
+          userId: req.body.userId, // Assuming you have user authentication and userId is available in req.body
+          product: req.body.productId, // Assuming productId is available in req.body
+          amount: req.body.amount,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          address: req.body.address,
+          phone: req.body.phone
+          // Add more fields as needed
+      });
 
-      // Fetch the products based on the items in the cart
-      const productsInCart = await Product.find({ _id: { $in: cartItems } });
+      // Save the order to the database
+      const savedOrder = await newOrder.save();
 
-      // Ensure req.session.quantity is initialized
-      req.session.quantity = req.session.quantity || {};
-
-      // Create an array to store products with quantities
-      const productsWithQuantity = productsInCart.map(product => ({
-          ...product.toObject(),
-          quantity: req.session.quantity[product._id] || 1 // Retrieve quantity from session
-      }));
-
-      // Calculate the total price based on fetched products
-      const totalPrice = calculateTotalPrice(productsInCart, req);
-
-      // Render the checkout page with products and total price
-      res.render('checkout', { products: productsWithQuantity, totalPrice });
+      res.status(201).json(savedOrder); // Send the saved order back as JSON response
   } catch (error) {
-      console.error('Error fetching cart:', error);
-      res.status(500).send('Internal Server Error');
+      console.error('Error saving order:', error);
+      res.status(500).json({ error: 'Failed to save order' });
   }
 });
-app.get("/orders", (req, res) => {
-  res.render("orders");
-});
+
+
 
 
 // Session middleware
@@ -492,6 +508,17 @@ app.get("/viewAllMembers",authenticateUser, async (req, res) => {
       res.status(500).send("Error fetching members: " + err.message);
   }
 });
+app.get("/adminOrdersView",authenticateUser, async (req, res) => {
+  try {
+      const order = await Order.find();
+
+      res.render("adminOrdersView", { order });
+  } catch (err) {
+      
+      res.status(500).send("Error fetching members: " + err.message);
+  }
+});
+
 
 //multer 
 // Define storage for uploaded images
@@ -558,7 +585,13 @@ app.post('/paypal/confirm-payment', (req, res) => {
       });
 });
 
+app.get("/aboutus", (req, res) => {
+  res.render("myTeams");
+    
+  });
 
+app.use(contactRoute);
+app.use(adminContactRoute);
 
 app.listen(port, () => {
   console.log(`server is running on ${port}`);

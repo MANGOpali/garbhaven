@@ -2,11 +2,16 @@ const mongoose = require('mongoose');
 
 // Define Order Schema
 const orderSchema = new mongoose.Schema({
-    orderId: { type: String, required: true },
+    
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // If you have user authentication
-    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-    amount: { type: Number, required: true },
+    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product'},
+    amount: { type: Number  },
     paymentStatus: { type: String, default: 'Paid' }, // You can extend this to handle different payment statuses
+    firstName: { type: String },
+    lastName: { type: String },
+    email: { type: String },
+    address: { type: String },
+    phone: { type: Number },
     // Add more fields as needed
 }, { timestamps: true });
 
