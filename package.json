@@ -23,6 +23,7 @@
     "express-formidable": "^1.2.0",
     "express-handlebars": "^7.1.2",
     "express-session": "^1.18.0",
+    "express-validator": "^7.1.0",
     "git": "^0.1.5",
     "gridfs-stream": "^1.1.1",
     "hbs": "^4.2.0",

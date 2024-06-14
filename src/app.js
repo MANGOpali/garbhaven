@@ -14,6 +14,7 @@ const app = express();
 //routes
 const contactRoute = require("../router/contact");
 const adminContactRoute= require("../router/adminContact");
+// const { validateOrder } = require('../validators/orderValidator');
 // Middleware to parse request body
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -328,27 +329,33 @@ app.get('/checkout', async (req, res) => {
     }
 });
 
+
 // Route to handle order creation
 app.post('/saveOrder', async (req, res) => {
   try {
+      const { userId, products, amount, firstName, lastName, email, address, phone } = req.body;
+
       // Create a new order instance
       const newOrder = new Order({
-          orderId: req.body.orderId,
-          userId: req.body.userId, // Assuming you have user authentication and userId is available in req.body
-          product: req.body.productId, // Assuming productId is available in req.body
-          amount: req.body.amount,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email,
-          address: req.body.address,
-          phone: req.body.phone
+          userId,
+          products: products.map(product => ({
+              productId: product.productId,
+              productName: product.productName,
+              quantity: product.quantity
+          })),
+          amount,
+          firstName,
+          lastName,
+          email,
+          address,
+          phone
           // Add more fields as needed
       });
 
       // Save the order to the database
       const savedOrder = await newOrder.save();
 
-      res.status(201).json(savedOrder); // Send the saved order back as JSON response
+      res.status(201).json(savedOrder); // Respond with saved order details
   } catch (error) {
       console.error('Error saving order:', error);
       res.status(500).json({ error: 'Failed to save order' });

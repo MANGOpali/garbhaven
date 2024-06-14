@@ -1,48 +1,92 @@
-{{>layout}}
-{{>adminNav}}
+{{> layout}}
+{{> adminNav}}
+
 <style>
+  .order-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
 
-.message-box {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
-}
+  .order-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-.message {
-  margin-bottom: 5px;
-}
+  .order-item {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+  }
 
-.message p {
-  margin: 5px 0;
-}
+  .order-item .details {
+    margin-top: 10px;
+  }
 
-.message p:first-child {
-  margin-top: 0;
-}
+  .order-item .products {
+    margin-top: 10px;
+  }
 
+  .order-item p {
+    margin: 5px 0;
+  }
+
+  .order-item ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .order-item ul li {
+    margin-bottom: 5px;
+  }
+  .product{
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .order-item .product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .order-item .product .product-name {
+    font-weight: bold;
+  }
 </style>
-<div class="tableContainer mt-4">
 
-    <div class="tableDiv">
-        <h1 style="text-align: center " class="mb-3">Orders</h1>
-        
-            
-                {{#each order}}
-                <div class="message-box">
-                    <div class="message">
-                        <p><strong>Payment Status:</strong> {{paymentStatus}}</p>
-                    <p><strong>First Name:</strong> {{firstName}}</p>
-                    <p><strong>Last Name:</strong> {{lastName}}</p>
-                    <p><strong>Email:</strong> {{email}}</p>
-                    <p><strong>Phone:</strong> {{phone}}</p>
-                    <p><strong>Address:</strong> {{address}}</p>
-                    <p><strong>Created At:</strong> {{createdAt}}</p>
-                    </div>
-                </div>
-                {{/each}}
+<div class="order-container">
+  <h1 class="order-header">Orders</h1>
 
-            
+  {{#each order}}
+  <div class="order-item">
+    <div class="details">
+      <p><strong>Payment Status:</strong> {{paymentStatus}}</p>
+      <p><strong>Name:</strong> {{firstName}} {{lastName}}</p>
+      <p><strong>Email:</strong> {{email}}</p>
+      <p><strong>Phone:</strong> {{phone}}</p>
+      <p><strong>Address:</strong> {{address}}</p>
+      <p><strong>Created At:</strong> {{createdAt}}</p>
     </div>
+
+    <div class="products">
+      <p><strong>Products:</strong></p>
+      <ul>
+        {{#each products}}
+        <li class="product">
+          <span class="product-name">{{this.productName}}</span>
+          <span class="product-quantity">Quantity: {{this.quantity}}</span>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+  {{/each}}
 </div>
-
-
