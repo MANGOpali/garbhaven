@@ -3,7 +3,7 @@
     {{>navbar}}
     
 
-    <form action="/register" method="POST" class="tableDiv">
+    <form id="registerForm" action="/register" method="POST" class="tableDiv">
 
         <div class="row mt-3">
         <div class="col">
@@ -23,11 +23,11 @@
         <div class="row">
         <div class="col">
             <label  class="first-label"> Password</label>
-        <input type="password" name="password" class="form-control" placeholder="First name" aria-label="First name">
+        <input type="password" name="password" class="form-control" placeholder="Password">
          </div>
         <div class="col mb-3">
             <label  class="last-label">Confirm Password</label>
-        <input type="password" name="confirmpassword" class="form-control" placeholder="Last name" aria-label="Last name">
+        <input type="password" name="confirmpassword" class="form-control" placeholder="Confirm Password">
         </div>
         </div>
         <div class="mb-3">
@@ -37,3 +37,55 @@
         <button type="submit" class="btn btn-dark">Submit</button>
     </form>
 </body>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            const form = event.target;
+            const firstName = form.firstname.value.trim();
+            const lastName = form.lastname.value.trim();
+            const email = form.email.value.trim();
+            const password = form.password.value.trim();
+            const confirmPassword = form.confirmpassword.value.trim();
+            const phone = form.phone.value.trim();
+
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const phonePattern = /^[0-9]{10}$/;
+            const namePattern = /^[a-zA-Z]+$/;
+
+            if (!namePattern.test(firstName)) {
+                alert('First Name should only contain letters.');
+                event.preventDefault();
+                return;
+            }
+
+            if (!namePattern.test(lastName)) {
+                alert('Last Name should only contain letters.');
+                event.preventDefault();
+                return;
+            }
+
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email address.');
+                event.preventDefault();
+                return;
+            }
+
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long.');
+                event.preventDefault();
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                event.preventDefault();
+                return;
+            }
+
+            if (!phonePattern.test(phone)) {
+                alert('Please enter a valid phone number (10 digits).');
+                event.preventDefault();
+                return;
+            }
+        });
+    </script>

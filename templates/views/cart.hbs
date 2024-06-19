@@ -229,12 +229,8 @@ paypal.Buttons({
                     
                 },
                 success: function (response) {
-                    // Handle success response from the server
-                    console.log(response);
-                    alert('Order saved successfully!');
-                    window.location.href = '/'; // Redirect to home page or confirmation page
-
-                    
+                    console.log('Success response:');                     
+                    window.location.href = '/';    
                 },
                 error: function (error) {
                     // Handle error response from the server

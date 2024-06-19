@@ -1,0 +1,14 @@
+{
+    "welcome": "स्वागत छ",
+    "order": {
+      "title": "अर्डर सारांश",
+      "firstName": "पहिलो नाम",
+      "lastName": "थर",
+      "email": "इमेल",
+      "phone": "फोन",
+      "address": "ठेगाना",
+      "total": "कुल",
+      "checkout": "चेकआउट"
+    }
+  }
+  

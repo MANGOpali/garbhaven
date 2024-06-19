@@ -91,7 +91,6 @@ paypal.configure({
 });
 
 
-
 app.get("/", async (req, res) => {
     try {
       const products = await Product.find();
@@ -564,7 +563,6 @@ app.post("/addProduct",upload.single('productImage'), async (req, res) => {
 
 // Route handler for handling PayPal payment confirmation
 app.post('/paypal/confirm-payment', (req, res) => {
-  // Handle PayPal payment confirmation here
   // Extract order information from PayPal 'details' object
   const orderId = req.body.id;
   const amount = req.body.purchase_units[0].amount.value;
@@ -583,12 +581,12 @@ app.post('/paypal/confirm-payment', (req, res) => {
   newOrder.save()
       .then(order => {
           console.log('Order created successfully:', order);
-          // Redirect or perform other actions as needed
-          res.sendStatus(200); // Send success response
+          
+          res.sendStatus(200); 
       })
       .catch(error => {
           console.error('Error creating order:', error);
-          res.status(500).send('Error creating order'); // Send error response
+          res.status(500).send('Error creating order'); 
       });
 });
 

@@ -1,0 +1,14 @@
+{
+    "welcome": "Welcome",
+    "order": {
+      "title": "Order Summary",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "total": "Total",
+      "checkout": "Checkout"
+    }
+  }
+  
